@@ -1,0 +1,65 @@
+
+<p-table #dt1 [columns]="cols" [value]="employeeData" styleClass="p-datatable-gridlines" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]"
+[globalFilterFields]="['id','name','email','body']" (sortFunction)="customSort($event)" [customSort]="true" editMode="row" dataKey="id">
+
+    <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+            </span> 
+             <span class="align-right" *ngIf="isEditable">
+                <button pButton type="button" label="Cancel" class="p-button-sm" (click)="cancel()"></button>
+            </span> 
+            <span class="align-right">
+                <button pButton type="button" label="Edit" class="p-button-sm" (click)="editData()"></button>
+            </span>  
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                {{col.header}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-editing="editing" let-ri="rowIndex">
+        <tr>
+            <ng-container *ngIf="!isEditable">
+                <td *ngFor="let col of columns">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="rowData[col.field]">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{rowData[col.field]}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+            </ng-container>
+            <ng-container *ngIf="isEditable">
+                <td *ngFor="let col of columns" pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <textarea pInputTextarea type="text" [value]="rowData[col.field]"></textarea>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{rowData[col.field]}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+            </ng-container>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft">
+        <p-button type="button" icon="pi pi-plus" styleClass="p-button-text"></p-button>
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+        <p-button type="button" icon="pi pi-cloud" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-table>
+
